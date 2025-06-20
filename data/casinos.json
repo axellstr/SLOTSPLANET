@@ -1,0 +1,87 @@
+{
+  "casinos": [
+    {
+      "id": 1750092055170,
+      "rank": 1,
+      "rankClass": "",
+      "name": "Test",
+      "logo": "/Assets/casino-1750092099094.svg",
+      "rating": 8.9,
+      "stars": 5,
+      "url": "https://www.youtube.com/watch?v=OOThYYjKWjU",
+      "isNew": true,
+      "hasVPN": true,
+      "vpnTooltip": "Προτείνουμε VPN για όλους τους παροχους, το οποίο να ανοίγετε (προτείνουμε Νορβηγία) πριν ανοίξετε το καζίνο.",
+      "bonus": {
+        "percentage": "100%",
+        "maxAmount": "5100$",
+        "promoCode": "Test123",
+        "wager": "30x",
+        "freeSpins": "No",
+        "verification": "Απαιτειται"
+      },
+      "features": {
+        "quickWithdrawals": true,
+        "withdrawalText": "Quick Withdrawls"
+      },
+      "buttonText": "Claim Bonus"
+    },
+    {
+      "id": 1750092494876,
+      "rank": 2,
+      "rankClass": "two",
+      "name": "Test",
+      "logo": "/Assets/casino-1750092500555.svg",
+      "rating": 8.9,
+      "stars": 5,
+      "url": "https://www.youtube.com/watch?v=OOThYYjKWjU",
+      "isNew": true,
+      "hasVPN": true,
+      "vpnTooltip": "Προτείνουμε VPN για όλους τους παροχους, το οποίο να ανοίγετε (προτείνουμε Νορβηγία) πριν ανοίξετε το καζίνο.",
+      "bonus": {
+        "percentage": "100%",
+        "maxAmount": "5100$",
+        "promoCode": "Test123",
+        "wager": "30x",
+        "freeSpins": "No",
+        "verification": "Απαιτειται"
+      },
+      "features": {
+        "quickWithdrawals": true,
+        "withdrawalText": "Quick Withdrawls"
+      },
+      "buttonText": "Claim Bonus"
+    },
+    {
+      "id": 1750092502459,
+      "rank": 3,
+      "rankClass": "three",
+      "name": "Test",
+      "logo": "/Assets/casino-1750092508197.svg",
+      "rating": 8.9,
+      "stars": 5,
+      "url": "https://www.youtube.com/watch?v=OOThYYjKWjU",
+      "isNew": true,
+      "hasVPN": true,
+      "vpnTooltip": "Προτείνουμε VPN για όλους τους παροχους, το οποίο να ανοίγετε (προτείνουμε Νορβηγία) πριν ανοίξετε το καζίνο.",
+      "bonus": {
+        "percentage": "100%",
+        "maxAmount": "5100$",
+        "promoCode": "Test123",
+        "wager": "30x",
+        "freeSpins": "No",
+        "verification": "Απαιτειται"
+      },
+      "features": {
+        "quickWithdrawals": true,
+        "withdrawalText": "Quick Withdrawls"
+      },
+      "buttonText": "Claim Bonus"
+    }
+  ],
+  "metadata": {
+    "lastUpdated": "2025-06-16T16:48:29.832Z",
+    "version": "1.0.0",
+    "totalCasinos": 3
+  }
+}

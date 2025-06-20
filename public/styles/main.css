@@ -1,0 +1,520 @@
+/* Main Website Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  background-color: #0f0f23;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Casino Card Container */
+.casino-card-container {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background: linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+  backdrop-filter: blur(10px);
+}
+
+
+/* Rank Badge */
+.casino-rank-badge {
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 20px 0 0 20px;
+}
+
+.casino-rank-badge.rank-1 {
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+}
+
+.casino-rank-badge.rank-2 {
+  background: linear-gradient(135deg, #ff8c42, #ff7518);
+}
+
+.casino-rank-badge.rank-3 {
+  background: linear-gradient(135deg, #ffd662, #ffb347);
+}
+
+.casino-rank-badge.rank-4 {
+  background: linear-gradient(135deg, #6bcf7f, #4ecdc4);
+}
+
+.casino-rank-badge.rank-5 {
+  background: linear-gradient(135deg, #45b7d1, #96ceb4);
+}
+
+.casino-rank-badge.rank-6 {
+  background: linear-gradient(135deg, #a855f7, #8b5cf6);
+}
+
+.casino-rank-badge.rank-7 {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.rank-number {
+  font-size: 32px;
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Main Card Content */
+.casino-card-content {
+  display: grid;
+  grid-template-columns: 300px 1fr auto;
+  align-items: center;
+  width: 100%;
+  padding: 24px;
+  gap: 32px;
+  background: linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+  position: relative;
+}
+
+
+/* Left Section: Logo and Rating */
+.casino-left-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.casino-logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.casino-logo {
+  height: 60px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
+  filter: brightness(1.1);
+}
+
+.casino-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.badge-new {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+}
+
+.badge-vpn {
+  background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+  color: white;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: help;
+  box-shadow: 0 4px 8px rgba(78, 205, 196, 0.3);
+}
+
+.casino-rating-container {
+  display: flex;
+  align-items: center;
+}
+
+.rating-display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 12px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rating-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffd93d;
+  text-shadow: 0 0 10px rgba(255, 217, 61, 0.5);
+}
+
+.stars-display {
+  display: flex;
+  gap: 2px;
+}
+
+/* Center Section: Bonus Grid */
+.casino-bonus-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.bonus-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 450px;
+}
+
+.bonus-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 70px;
+}
+
+
+.bonus-label {
+  font-size: 12px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.bonus-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+}
+
+/* Right Section: Action Button */
+.casino-right-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-width: 180px;
+}
+
+.claim-bonus-button {
+  background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 16px 32px;
+  border-radius: 5rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(255, 71, 87, 0.3);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.claim-bonus-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.claim-bonus-button:hover::before {
+  left: 100%;
+}
+
+.claim-bonus-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(255, 71, 87, 0.4);
+}
+
+.claim-bonus-button:active {
+  transform: translateY(0);
+}
+
+.quick-withdrawals-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #34d399;
+  font-weight: 600;
+}
+
+.withdrawal-text {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.withdrawal-icon {
+  font-size: 14px;
+  color: #fbbf24;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .casino-card-content {
+    grid-template-columns: 280px 1fr auto;
+    gap: 24px;
+  }
+  
+  .bonus-grid {
+    max-width: 400px;
+    gap: 10px;
+  }
+  
+  .casino-right-section {
+    min-width: 160px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .casino-card-content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .casino-left-section {
+    align-items: center;
+  }
+  
+  .casino-logo-container {
+    justify-content: center;
+  }
+  
+  .rating-display {
+    justify-content: center;
+  }
+  
+  .bonus-grid {
+    max-width: 100%;
+  }
+  
+  .casino-right-section {
+    align-items: center;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .casino-card-container {
+    flex-direction: column;
+  }
+  
+  .casino-rank-badge {
+    width: 100%;
+    height: 60px;
+    border-radius: 20px 20px 0 0;
+    justify-content: flex-start;
+    padding-left: 24px;
+  }
+  
+  .casino-card-content {
+    padding: 20px;
+    gap: 16px;
+  }
+  
+  .bonus-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 8px;
+  }
+  
+  .claim-bonus-button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 16px;
+  }
+  
+  .casino-card-content {
+    padding: 16px;
+  }
+  
+  .casino-logo {
+    height: 50px;
+  }
+  
+  .rating-number {
+    font-size: 24px;
+  }
+  
+  .bonus-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  
+  .bonus-item {
+    min-height: 60px;
+    padding: 12px 8px;
+  }
+  
+  .bonus-value {
+    font-size: 14px;
+  }
+  
+  .claim-bonus-button {
+    padding: 14px 24px;
+    font-size: 14px;
+  }
+}
+
+/* Loading Animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+
+/* Additional Utilities */
+.text-4xl { font-size: 2.25rem; }
+.text-6xl { font-size: 3.75rem; }
+.text-xl { font-size: 1.25rem; }
+.text-lg { font-size: 1.125rem; }
+.text-sm { font-size: 0.875rem; }
+
+.font-bold { font-weight: 700; }
+.font-medium { font-weight: 500; }
+
+.text-white { color: #ffffff; }
+.text-gray-300 { color: #d1d5db; }
+.text-gray-400 { color: #9ca3af; }
+.text-yellow-400 { color: #fbbf24; }
+.text-gray-600 { color: #4b5563; }
+
+.fill-current { fill: currentColor; }
+
+.mb-4 { margin-bottom: 1rem; }
+.mb-12 { margin-bottom: 3rem; }
+.mt-16 { margin-top: 4rem; }
+
+.max-w-2xl { max-width: 42rem; }
+.max-w-6xl { max-width: 72rem; }
+
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+.space-y-4 > * + * { margin-top: 1rem; }
+
+.py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+
+.text-center { text-align: center; }
+
+.w-4 { width: 1rem; }
+.h-4 { height: 1rem; }
+.w-12 { width: 3rem; }
+.h-12 { height: 3rem; }
+
+.min-h-screen { min-height: 100vh; }
+
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+
+
+.rounded-full { border-radius: 9999px; }
+.border-b-2 { border-bottom-width: 2px; }
+.border-white { border-color: #ffffff; }
+
+/* Floating Admin Button */
+.floating-admin-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: linear-gradient(135deg, #9333ea, #e91e63);
+  color: white;
+  padding: 16px;
+  border-radius: 50%;
+  box-shadow: 0 10px 25px rgba(147, 51, 234, 0.3);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+}
+
+.floating-admin-btn:hover {
+  background: linear-gradient(135deg, #7c3aed, #be185d);
+  box-shadow: 0 15px 35px rgba(147, 51, 234, 0.4);
+  transform: translateY(-2px);
+}
+
+.floating-admin-btn .admin-icon {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease;
+}
+
+.floating-admin-btn:hover .admin-icon {
+  transform: rotate(90deg);
+}
+
+/* Responsive adjustments for admin button */
+@media (max-width: 768px) {
+  .floating-admin-btn {
+    bottom: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    padding: 12px;
+  }
+  
+  .floating-admin-btn .admin-icon {
+    width: 20px;
+    height: 20px;
+  }
+} 
