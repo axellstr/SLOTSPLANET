@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import { isSupabaseConfigured } from '../../lib/supabase';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, DroppableProvided } from 'react-beautiful-dnd';
+import { StrictModeDroppable } from '../../components/StrictModeDroppable';
 import { 
   PlusIcon, 
   PencilIcon, 
@@ -429,35 +430,6 @@ export default function AdminDashboard() {
               </div>
             </section>
 
-            {/* Database Status Banner */}
-            <div className="info-banner" style={{
-              background: isSupabaseConfigured 
-                ? 'linear-gradient(135deg, #10b981, #059669)' 
-                : 'linear-gradient(135deg, #f39c12, #e67e22)',
-              color: 'white',
-              padding: '12px 20px',
-              borderRadius: '8px',
-              margin: '20px 0',
-              border: isSupabaseConfigured ? '1px solid #059669' : '1px solid #e67e22',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px'
-            }}>
-              <div style={{ fontSize: '20px' }}>{isSupabaseConfigured ? '✅' : '⚠️'}</div>
-              <div>
-                {isSupabaseConfigured ? (
-                  <>
-                    <strong>Supabase Integration Active:</strong> All changes are now saved to a persistent database. 
-                    Your casino data will be preserved across server restarts and deployments.
-                  </>
-                ) : (
-                  <>
-                    <strong>Temporary Storage Mode:</strong> Changes are saved temporarily in memory. 
-                    Configure Supabase in your .env.local file for persistent storage.
-                  </>
-                )}
-              </div>
-            </div>
 
             {/* Navigation Tabs */}
             <nav className="tab-navigation">
@@ -560,8 +532,8 @@ export default function AdminDashboard() {
                   </div>
                   
                   <DragDropContext onDragEnd={handleDragEnd}>
-                    <Droppable droppableId="casinos">
-                      {(provided) => (
+                    <StrictModeDroppable droppableId="casinos">
+                      {(provided: DroppableProvided) => (
                         <div {...provided.droppableProps} ref={provided.innerRef} className="reorder-list">
                           {casinos.map((casino, index) => (
                             <Draggable key={casino.id} draggableId={casino.id.toString()} index={index}>
@@ -609,7 +581,7 @@ export default function AdminDashboard() {
                           {provided.placeholder}
                         </div>
                       )}
-                    </Droppable>
+                    </StrictModeDroppable>
                   </DragDropContext>
                 </div>
               )}

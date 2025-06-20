@@ -11,7 +11,7 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.6;
   color: hsl(224, 71.4%, 4.1%);
-  background: hsl(0, 0%, 100%);
+  background: hsl(210, 40%, 98%);
 }
 
 /* Main Dashboard Layout */
@@ -22,7 +22,6 @@ body {
 
 /* Header Styles */
 .dashboard-header {
-  background: hsl(0, 0%, 100%);
   border-bottom: 1px solid hsl(214.3, 31.8%, 91.4%);
 }
 
@@ -877,10 +876,6 @@ body {
   transition: all 0.2s ease;
 }
 
-.form-section:hover {
-  border-color: hsl(214.3, 31.8%, 85%);
-  background: hsl(0, 0%, 97%);
-}
 
 .section-header {
   display: flex;
@@ -978,11 +973,7 @@ body {
   transition: all 0.2s ease;
 }
 
-.checkbox-item:hover {
-  border-color: hsl(221.2, 83.2%, 53.3%);
-  background: hsl(221.2, 83.2%, 98%);
-  transform: translateY(-1px);
-}
+
 
 .form-checkbox {
   width: 1rem;
@@ -1042,12 +1033,6 @@ body {
   transition: all 0.2s ease;
 }
 
-.upload-btn:hover {
-  border-color: hsl(221.2, 83.2%, 53.3%);
-  background: hsl(221.2, 83.2%, 98%);
-  color: hsl(221.2, 83.2%, 53.3%);
-  transform: translateY(-1px);
-}
 
 .upload-btn:disabled {
   opacity: 0.5;
@@ -1099,11 +1084,7 @@ body {
   justify-content: center;
 }
 
-.btn-cancel:hover {
-  background: hsl(0, 0%, 97%);
-  border-color: hsl(220, 8.9%, 46.1%);
-  transform: translateY(-1px);
-}
+
 
 .btn-submit {
   background: hsl(221.2, 83.2%, 53.3%);
@@ -1119,11 +1100,7 @@ body {
   justify-content: center;
 }
 
-.btn-submit:hover {
-  background: hsl(221.2, 83.2%, 48%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px hsl(221.2, 83.2%, 53.3%, 0.3);
-}
+
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
