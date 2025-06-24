@@ -25,6 +25,18 @@ export interface Casino {
   buttonText: string;
 }
 
+export interface Billboard {
+  id: number;
+  title: string;
+  subtitle: string;
+  description: string;
+  buttonText: string;
+  buttonUrl: string;
+  backgroundImage: string;
+  isActive: boolean;
+  order: number;
+}
+
 export interface CasinoData {
   casinos: Casino[];
   metadata: {

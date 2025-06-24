@@ -1,29 +1,35 @@
 import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import { isSupabaseConfigured } from '../../lib/supabase';
+import Header from '../../components/Header';
 import { DragDropContext, Draggable, DroppableProvided } from 'react-beautiful-dnd';
 import { StrictModeDroppable } from '../../components/StrictModeDroppable';
 import { 
-  PlusIcon, 
-  PencilIcon, 
-  TrashIcon, 
-  ArrowUpIcon, 
-  ArrowDownIcon,
-  SaveIcon,
-  DownloadIcon,
-  BarChart3Icon,
-  EyeIcon,
-  GripVerticalIcon,
-  TrendingUpIcon,
-  StarIcon,
-  AwardIcon,
-  UsersIcon,
-  ShieldCheckIcon,
-  RefreshCwIcon
-} from 'lucide-react';
-import { Casino } from '../../lib/types';
+  RiAddLine, 
+  RiPencilLine, 
+  RiDeleteBinLine, 
+  RiArrowUpLine, 
+  RiArrowDownLine,
+  RiSaveLine,
+  RiDownloadLine,
+  RiBarChartLine,
+  RiEyeLine,
+  RiDragMoveLine,
+  RiLineChartLine,
+  RiStarFill,
+  RiAwardLine,
+  RiGroupLine,
+  RiShieldCheckLine,
+  RiRefreshLine,
+  RiLogoutBoxLine,
+  RiImageLine,
+  RiPlayCircleLine
+} from '@remixicon/react';
+import { Casino, Billboard } from '../../lib/types';
 import { getRankClass, sortCasinosByRank } from '../../lib/casinoData';
 import CasinoForm from '../../components/CasinoForm';
+import LoginForm from '../../components/LoginForm';
+import BillboardForm from '../../components/BillboardForm';
 
 interface Stats {
   totalCasinos: number;
@@ -34,8 +40,9 @@ interface Stats {
 
 export default function AdminDashboard() {
   const [casinos, setCasinos] = useState<Casino[]>([]);
+  const [billboards, setBillboards] = useState<Billboard[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('manage');
   const [stats, setStats] = useState<Stats>({
     totalCasinos: 0,
     averageRating: 0,
@@ -43,12 +50,15 @@ export default function AdminDashboard() {
     newCasinos: 0
   });
   const [showCasinoForm, setShowCasinoForm] = useState(false);
+  const [showBillboardForm, setShowBillboardForm] = useState(false);
   const [editingCasino, setEditingCasino] = useState<Casino | null>(null);
+  const [editingBillboard, setEditingBillboard] = useState<Billboard | null>(null);
   const [notification, setNotification] = useState<{
     message: string;
     type: 'success' | 'error' | 'warning';
   } | null>(null);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
 
   const updateStats = useCallback((casinoData: Casino[]) => {
     const total = casinoData.length;
@@ -71,7 +81,6 @@ export default function AdminDashboard() {
 
   const loadCasinos = useCallback(async () => {
     try {
-      setIsRefreshing(true);
       const response = await fetch('/api/casinos');
       const result = await response.json();
       
@@ -84,16 +93,76 @@ export default function AdminDashboard() {
     } catch (error) {
       showNotification('Error loading casinos', 'error');
       console.error('Load error:', error);
-    } finally {
-      setLoading(false);
-      setIsRefreshing(false);
     }
   }, [updateStats, showNotification]);
 
-  // Load casino data
+  const loadBillboards = useCallback(async () => {
+    try {
+      const response = await fetch('/api/billboards');
+      const result = await response.json();
+      
+      if (result.success) {
+        setBillboards(result.data.sort((a: Billboard, b: Billboard) => a.order - b.order));
+      } else {
+        showNotification('Failed to load billboards', 'error');
+      }
+    } catch (error) {
+      showNotification('Error loading billboards', 'error');
+      console.error('Billboard load error:', error);
+    }
+  }, [showNotification]);
+
+  const loadData = useCallback(async () => {
+    try {
+      await Promise.all([loadCasinos(), loadBillboards()]);
+    } finally {
+      setLoading(false);
+    }
+  }, [loadCasinos, loadBillboards]);
+
+  // Check authentication on mount
   useEffect(() => {
-    loadCasinos();
-  }, [loadCasinos]);
+    const checkAuth = async () => {
+      const token = localStorage.getItem('admin_token');
+      if (!token) {
+        setAuthLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/auth', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'verify',
+            token: token,
+          }),
+        });
+
+        const result = await response.json();
+        if (result.success && result.valid) {
+          setIsAuthenticated(true);
+        } else {
+          localStorage.removeItem('admin_token');
+        }
+      } catch (error) {
+        localStorage.removeItem('admin_token');
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  // Load data when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadData();
+    }
+  }, [isAuthenticated, loadData]);
 
   const saveCasinos = async (updatedCasinos?: Casino[]) => {
     const dataToSave = updatedCasinos || casinos;
@@ -198,24 +267,30 @@ export default function AdminDashboard() {
     showNotification('Casino deleted successfully!', 'success');
   };
 
-  const exportData = () => {
-    const dataStr = JSON.stringify({
-      casinos,
-      exportDate: new Date().toISOString(),
-      version: '1.0.0'
-    }, null, 2);
+  const saveBillboards = async (updatedBillboards?: Billboard[]) => {
+    const dataToSave = updatedBillboards || billboards;
     
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `casino-data-${new Date().toISOString().split('T')[0]}.json`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    showNotification('Data exported successfully!', 'success');
+    try {
+      const response = await fetch('/api/billboards', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ billboards: dataToSave }),
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        setBillboards(dataToSave.sort((a, b) => a.order - b.order));
+        showNotification('Billboards saved successfully!', 'success');
+      } else {
+        showNotification(result.error || 'Failed to save billboards', 'error');
+      }
+    } catch (error) {
+      showNotification('Error saving billboards', 'error');
+      console.error('Billboard save error:', error);
+    }
   };
 
   const handleSaveCasino = (casino: Casino) => {
@@ -234,6 +309,68 @@ export default function AdminDashboard() {
     saveCasinos(updatedCasinos);
     setShowCasinoForm(false);
     setEditingCasino(null);
+  };
+
+  const handleSaveBillboard = (billboard: Billboard) => {
+    let updatedBillboards: Billboard[];
+    
+    if (editingBillboard) {
+      // Editing existing billboard
+      updatedBillboards = billboards.map(b => b.id === billboard.id ? billboard : b);
+    } else {
+      // Adding new billboard
+      updatedBillboards = [...billboards, billboard];
+    }
+    
+    // Sort by order and update
+    updatedBillboards = updatedBillboards.sort((a, b) => a.order - b.order);
+    saveBillboards(updatedBillboards);
+    setShowBillboardForm(false);
+    setEditingBillboard(null);
+  };
+
+  const deleteBillboard = (id: number) => {
+    if (!confirm('Are you sure you want to delete this billboard?')) return;
+    
+    const updatedBillboards = billboards
+      .filter(b => b.id !== id)
+      .map((billboard, index) => ({
+        ...billboard,
+        order: index + 1
+      }));
+
+    setBillboards(updatedBillboards);
+    saveBillboards(updatedBillboards);
+    showNotification('Billboard deleted successfully!', 'success');
+  };
+
+  const handleLogin = (token: string) => {
+    setIsAuthenticated(true);
+    showNotification('Welcome back! Login successful.', 'success');
+  };
+
+  const handleLogout = async () => {
+    const token = localStorage.getItem('admin_token');
+    
+    try {
+      await fetch('/api/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'logout',
+          token: token,
+        }),
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+    
+    localStorage.removeItem('admin_token');
+    setIsAuthenticated(false);
+    setCasinos([]);
+    showNotification('Logged out successfully', 'success');
   };
 
   const StatCard = ({ title, value, icon: Icon, color, subtitle }: {
@@ -262,7 +399,7 @@ export default function AdminDashboard() {
       <div className="casino-card-header">
         <div className="casino-rank-badge">
           <span className="rank-number">#{casino.rank}</span>
-          {casino.rank <= 3 && <AwardIcon className="w-4 h-4 ml-1" />}
+          {casino.rank <= 3 && <RiAwardLine className="w-4 h-4 ml-1" />}
         </div>
         <div className="casino-status-badges">
           {casino.isNew && <span className="badge badge-new">NEW</span>}
@@ -278,7 +415,7 @@ export default function AdminDashboard() {
         <div className="casino-rating">
           <div className="rating-stars">
             {[...Array(5)].map((_, i) => (
-              <StarIcon
+              <RiStarFill
                 key={i}
                 className={`w-4 h-4 ${i < casino.stars ? 'star-filled' : 'star-empty'}`}
               />
@@ -304,20 +441,50 @@ export default function AdminDashboard() {
           }}
           className="btn btn-primary btn-sm"
         >
-          <PencilIcon className="w-4 h-4 mr-2" />
+          <RiPencilLine className="w-4 h-4 mr-2" />
           Edit
         </button>
         <button
           onClick={() => deleteCasino(casino.id)}
           className="btn btn-danger btn-sm"
         >
-          <TrashIcon className="w-4 h-4 mr-2" />
+          <RiDeleteBinLine className="w-4 h-4 mr-2" />
           Delete
         </button>
       </div>
     </div>
   );
 
+  // Show loading screen while checking auth
+  if (authLoading) {
+    return (
+      <div className="loading-screen">
+        <div className="loading-content">
+          <div className="loading-spinner"></div>
+          <div className="loading-text">
+            <h2>Casino CMS</h2>
+            <p>Verifying authentication...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login form if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <>
+        <Head>
+          <title>Login - Casino CMS</title>
+          <meta name="description" content="Casino CMS Admin Login" />
+          <link rel="stylesheet" href="/styles/admin.css" />
+        </Head>
+        <LoginForm onLogin={handleLogin} />
+      </>
+    );
+  }
+
+  // Show loading screen while loading casino data
   if (loading) {
     return (
       <div className="loading-screen">
@@ -346,49 +513,32 @@ export default function AdminDashboard() {
           <div className="header-content">
             <div className="header-left">
               <div className="logo-section">
-                <BarChart3Icon className="logo-icon" />
+                <div className="logo-icon">
+                  <RiShieldCheckLine className="w-6 h-6" />
+                </div>
                 <div className="logo-text">
                   <h1>Casino CMS</h1>
                   <span>Admin Dashboard</span>
                 </div>
               </div>
             </div>
-            
             <div className="header-actions">
-              <button
-                onClick={() => loadCasinos()}
-                className={`btn btn-secondary ${isRefreshing ? 'loading' : ''}`}
-                disabled={isRefreshing}
-              >
-                <RefreshCwIcon className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-                Refresh
-              </button>
-              
-              <button
-                onClick={() => saveCasinos()}
-                className="btn btn-success"
-              >
-                <SaveIcon className="w-4 h-4 mr-2" />
-                Save Changes
-              </button>
-              
-              <button
-                onClick={exportData}
-                className="btn btn-warning"
-              >
-                <DownloadIcon className="w-4 h-4 mr-2" />
-                Export Data
-              </button>
-              
               <a
                 href="/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-primary"
               >
-                <EyeIcon className="w-4 h-4 mr-2" />
+                <RiEyeLine className="w-4 h-4 mr-2" />
                 View Site
               </a>
+              <button
+                onClick={handleLogout}
+                className="btn btn-danger"
+              >
+                <RiLogoutBoxLine className="w-4 h-4 mr-2" />
+                Logout
+              </button>
             </div>
           </div>
         </header>
@@ -402,101 +552,61 @@ export default function AdminDashboard() {
                 <StatCard
                   title="Total Casinos"
                   value={stats.totalCasinos}
-                  icon={UsersIcon}
+                  icon={RiGroupLine}
                   color="stat-blue"
                   subtitle="Active listings"
                 />
                 <StatCard
                   title="Average Rating"
                   value={stats.averageRating}
-                  icon={StarIcon}
+                  icon={RiStarFill}
                   color="stat-green"
                   subtitle="Out of 10"
                 />
                 <StatCard
                   title="Top Rated"
                   value={stats.topRated}
-                  icon={AwardIcon}
+                  icon={RiAwardLine}
                   color="stat-yellow"
                   subtitle="9.5+ rating"
                 />
-                <StatCard
+                <StatCard 
                   title="New Casinos"
                   value={stats.newCasinos}
-                  icon={TrendingUpIcon}
+                  icon={RiLineChartLine}
                   color="stat-purple"
                   subtitle="Recently added"
                 />
               </div>
             </section>
 
-
-            {/* Navigation Tabs */}
-            <nav className="tab-navigation">
-              <button
-                onClick={() => setActiveTab('overview')}
-                className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
-              >
-                <BarChart3Icon className="w-5 h-5 mr-2" />
-                Overview
-              </button>
+            {/* Dashboard Tabs */}
+            <div className="dashboard-tabs">
               <button
                 onClick={() => setActiveTab('manage')}
-                className={`tab-button ${activeTab === 'manage' ? 'active' : ''}`}
+                className={`dashboard-tab ${activeTab === 'manage' ? 'active' : ''}`}
               >
-                <ShieldCheckIcon className="w-5 h-5 mr-2" />
+                <RiShieldCheckLine className="w-5 h-5 mr-2" />
                 Manage Casinos
               </button>
               <button
-                onClick={() => setActiveTab('reorder')}
-                className={`tab-button ${activeTab === 'reorder' ? 'active' : ''}`}
+                onClick={() => setActiveTab('billboards')}
+                className={`dashboard-tab ${activeTab === 'billboards' ? 'active' : ''}`}
               >
-                <GripVerticalIcon className="w-5 h-5 mr-2" />
+                <RiImageLine className="w-5 h-5 mr-2" />
+                Billboard Carousel
+              </button>
+              <button
+                onClick={() => setActiveTab('reorder')}
+                className={`dashboard-tab ${activeTab === 'reorder' ? 'active' : ''}`}
+              >
+                <RiDragMoveLine className="w-5 h-5 mr-2" />
                 Reorder Rankings
               </button>
-            </nav>
+            </div>
 
             {/* Tab Content */}
             <section className="tab-content">
-              {activeTab === 'overview' && (
-                <div className="overview-tab">
-                  <div className="section-header">
-                    <h2>Casino Overview</h2>
-                    <p>Quick overview of your casino listings and performance metrics</p>
-                  </div>
-                  
-                  <div className="overview-grid">
-                    <div className="overview-card">
-                      <h3>Recent Activity</h3>
-                      <div className="activity-list">
-                        {casinos.slice(0, 5).map(casino => (
-                          <div key={casino.id} className="activity-item">
-                            <img src={casino.logo} alt={casino.name} className="activity-logo" />
-                            <div>
-                              <div className="activity-name">{casino.name}</div>
-                              <div className="activity-meta">Rank #{casino.rank} • Rating {casino.rating}</div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="overview-card">
-                      <h3>Top Performers</h3>
-                      <div className="performers-list">
-                        {casinos.filter(c => c.rating >= 9.0).slice(0, 5).map(casino => (
-                          <div key={casino.id} className="performer-item">
-                            <span className="performer-rank">#{casino.rank}</span>
-                            <span className="performer-name">{casino.name}</span>
-                            <span className="performer-rating">{casino.rating}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
               {activeTab === 'manage' && (
                 <div className="manage-tab">
                   <div className="section-header">
@@ -511,7 +621,7 @@ export default function AdminDashboard() {
                       }}
                       className="btn btn-primary btn-lg"
                     >
-                      <PlusIcon className="w-5 h-5 mr-2" />
+                      <RiAddLine className="w-5 h-5 mr-2" />
                       Add New Casino
                     </button>
                   </div>
@@ -521,6 +631,104 @@ export default function AdminDashboard() {
                       <CasinoCard key={casino.id} casino={casino} />
                     ))}
                   </div>
+                </div>
+              )}
+
+              {activeTab === 'billboards' && (
+                <div className="billboards-tab">
+                  <div className="section-header">
+                    <div>
+                      <h2>Billboard Carousel</h2>
+                      <p>Manage promotional slides for the homepage carousel</p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setEditingBillboard(null);
+                        setShowBillboardForm(true);
+                      }}
+                      className="btn btn-primary btn-lg"
+                    >
+                      <RiAddLine className="w-5 h-5 mr-2" />
+                      Add New Billboard
+                    </button>
+                  </div>
+
+                  <div className="billboards-grid">
+                    {billboards.map((billboard) => (
+                      <div key={billboard.id} className="billboard-card">
+                        <div className="billboard-card-header">
+                          <div className="billboard-order">
+                            Order #{billboard.order}
+                          </div>
+                          <div className="billboard-status">
+                            {billboard.isActive ? (
+                              <span className="status-active">Active</span>
+                            ) : (
+                              <span className="status-inactive">Inactive</span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="billboard-preview">
+                          <div 
+                            className="billboard-background"
+                            style={{
+                              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)), url(${billboard.backgroundImage})`
+                            }}
+                          >
+                            <div className="billboard-content-preview">
+                              <h3>{billboard.title}</h3>
+                              <h4>{billboard.subtitle}</h4>
+                              <p>{billboard.description}</p>
+                              <span className="billboard-button-preview">
+                                {billboard.buttonText}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="billboard-card-actions">
+                          <button
+                            onClick={() => {
+                              setEditingBillboard(billboard);
+                              setShowBillboardForm(true);
+                            }}
+                            className="btn btn-primary btn-sm"
+                          >
+                            <RiPencilLine className="w-4 h-4 mr-2" />
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => deleteBillboard(billboard.id)}
+                            className="btn btn-danger btn-sm"
+                          >
+                            <RiDeleteBinLine className="w-4 h-4 mr-2" />
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {billboards.length === 0 && (
+                    <div className="empty-state">
+                      <div className="empty-state-icon">
+                        <RiImageLine className="w-12 h-12" />
+                      </div>
+                      <h3>No billboards created yet</h3>
+                      <p>Create your first promotional billboard to display on the homepage carousel.</p>
+                      <button
+                        onClick={() => {
+                          setEditingBillboard(null);
+                          setShowBillboardForm(true);
+                        }}
+                        className="btn btn-primary"
+                      >
+                        <RiAddLine className="w-4 h-4 mr-2" />
+                        Create Billboard
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -544,7 +752,7 @@ export default function AdminDashboard() {
                                   className={`reorder-item ${snapshot.isDragging ? 'dragging' : ''}`}
                                 >
                                   <div className="reorder-drag-handle" {...provided.dragHandleProps}>
-                                    <GripVerticalIcon className="w-5 h-5" />
+                                    <RiDragMoveLine className="w-5 h-5" />
                                   </div>
                                   
                                   <div className="reorder-rank">#{casino.rank}</div>
@@ -563,7 +771,7 @@ export default function AdminDashboard() {
                                       className="btn btn-icon"
                                       title="Move Up"
                                     >
-                                      <ArrowUpIcon className="w-4 h-4" />
+                                      <RiArrowUpLine className="w-4 h-4" />
                                     </button>
                                     <button
                                       onClick={() => moveDown(casino.id)}
@@ -571,7 +779,7 @@ export default function AdminDashboard() {
                                       className="btn btn-icon"
                                       title="Move Down"
                                     >
-                                      <ArrowDownIcon className="w-4 h-4" />
+                                      <RiArrowDownLine className="w-4 h-4" />
                                     </button>
                                   </div>
                                 </div>
@@ -609,7 +817,19 @@ export default function AdminDashboard() {
           onSave={handleSaveCasino}
           existingCasinos={casinos}
         />
+
+        {/* Billboard Form Modal */}
+        <BillboardForm
+          billboard={editingBillboard}
+          isOpen={showBillboardForm}
+          onClose={() => {
+            setShowBillboardForm(false);
+            setEditingBillboard(null);
+          }}
+          onSave={handleSaveBillboard}
+          existingBillboards={billboards}
+        />
       </div>
     </>
   );
-} 
+}

@@ -1,7 +1,22 @@
 import { useEffect, useState } from "react";
 import { Droppable, DroppableProps } from "react-beautiful-dnd";
 
-export const StrictModeDroppable = ({ children, ...props }: DroppableProps) => {
+interface StrictModeDroppableProps extends DroppableProps {
+  children: any;
+}
+
+export const StrictModeDroppable = ({ 
+  children, 
+  droppableId,
+  type = "DEFAULT",
+  mode = "standard",
+  isDropDisabled = false,
+  isCombineEnabled = false,
+  direction = "vertical",
+  ignoreContainerClipping = false,
+  renderClone,
+  getContainerForClone
+}: StrictModeDroppableProps) => {
   const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
@@ -17,5 +32,19 @@ export const StrictModeDroppable = ({ children, ...props }: DroppableProps) => {
     return null;
   }
 
-  return <Droppable {...props}>{children}</Droppable>;
+  return (
+    <Droppable 
+      droppableId={droppableId}
+      type={type}
+      mode={mode}
+      isDropDisabled={isDropDisabled}
+      isCombineEnabled={isCombineEnabled}
+      direction={direction}
+      ignoreContainerClipping={ignoreContainerClipping}
+      renderClone={renderClone}
+      getContainerForClone={getContainerForClone}
+    >
+      {children}
+    </Droppable>
+  );
 }; 

@@ -36,14 +36,15 @@ export default async function handler(
 
     // Parse the uploaded file
     const form = formidable({
-      maxFileSize: 5 * 1024 * 1024, // 5MB limit
+      maxFileSize: 10 * 1024 * 1024, // 10MB limit for billboard images
       keepExtensions: true,
     });
 
     const [fields, files] = await form.parse(req);
     console.log('Parsed form data. Files:', Object.keys(files));
     
-    const file = Array.isArray(files.file) ? files.file[0] : files.file;
+    const file = Array.isArray(files.image) ? files.image[0] : files.image || 
+                 (files.file ? (Array.isArray(files.file) ? files.file[0] : files.file) : null);
 
     if (!file) {
       console.log('No file found in upload');
@@ -78,7 +79,11 @@ export default async function handler(
     const originalName = file.originalFilename || 'image';
     const extension = originalName.split('.').pop() || 'jpg';
     const sanitizedName = originalName.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const fileName = `casino-logos/${timestamp}-${sanitizedName}`;
+    
+    // Get image type from fields to determine folder
+    const imageType = Array.isArray(fields.type) ? fields.type[0] : fields.type;
+    const folder = imageType === 'billboard' ? 'billboard-images' : 'casino-logos';
+    const fileName = `${folder}/${timestamp}-${sanitizedName}`;
 
     console.log('Uploading to Supabase with filename:', fileName);
 
@@ -86,9 +91,12 @@ export default async function handler(
     // The bucket exists but listing might be restricted by RLS policies
     console.log('Attempting direct upload to casino-assets bucket...');
 
+    // Determine which bucket to use based on image type
+    const bucketName = imageType === 'billboard' ? 'boards' : 'casino-assets';
+    
     // Upload to Supabase Storage
     const { data, error } = await supabase!.storage
-      .from('casino-assets')
+      .from(bucketName)
       .upload(fileName, fileBuffer, {
         contentType: file.mimetype || 'image/jpeg',
         upsert: false
@@ -101,7 +109,7 @@ export default async function handler(
       if (error.message.includes('Bucket not found')) {
         return res.status(500).json({ 
           success: false, 
-          error: 'Storage bucket "casino-assets" not found. Please ensure it exists in your Supabase dashboard.',
+          error: `Storage bucket "${bucketName}" not found. Please ensure it exists in your Supabase dashboard.`,
           debug: { uploadError: error }
         });
       }
@@ -125,7 +133,7 @@ export default async function handler(
 
     // Get the public URL
     const { data: urlData } = supabase!.storage
-      .from('casino-assets')
+      .from(bucketName)
       .getPublicUrl(fileName);
 
     if (!urlData?.publicUrl) {

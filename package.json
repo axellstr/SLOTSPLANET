@@ -19,10 +19,10 @@
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
+    "@remixicon/react": "^4.6.0",
     "@supabase/supabase-js": "^2.50.0",
     "@types/formidable": "^3.4.5",
     "formidable": "^3.5.4",
-    "lucide-react": "^0.294.0",
     "next": "^14.2.30",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",

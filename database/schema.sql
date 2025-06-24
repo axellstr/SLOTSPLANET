@@ -41,11 +41,43 @@ CREATE INDEX IF NOT EXISTS idx_casinos_rank ON casinos(rank);
 -- Create index on name for faster searches
 CREATE INDEX IF NOT EXISTS idx_casinos_name ON casinos(name);
 
+-- Create billboards table
+CREATE TABLE IF NOT EXISTS billboards (
+    id BIGINT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    subtitle VARCHAR(500) NOT NULL,
+    description TEXT NOT NULL,
+    "buttonText" VARCHAR(100) NOT NULL,
+    "buttonUrl" VARCHAR(500) NOT NULL,
+    "backgroundImage" VARCHAR(500) NOT NULL,
+    "isActive" BOOLEAN DEFAULT TRUE,
+    "order" INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create updated_at trigger for billboards
+CREATE TRIGGER update_billboards_updated_at 
+    BEFORE UPDATE ON billboards 
+    FOR EACH ROW 
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Create indexes for billboards
+CREATE INDEX IF NOT EXISTS idx_billboards_order ON billboards("order");
+CREATE INDEX IF NOT EXISTS idx_billboards_active ON billboards("isActive");
+
 -- Enable Row Level Security (RLS)
 ALTER TABLE casinos ENABLE ROW LEVEL SECURITY;
+ALTER TABLE billboards ENABLE ROW LEVEL SECURITY;
 
 -- Create policy to allow all operations for now (you can restrict this later)
 CREATE POLICY "Allow all operations on casinos" ON casinos
+    FOR ALL 
+    USING (true)
+    WITH CHECK (true);
+
+-- Create policy to allow all operations on billboards
+CREATE POLICY "Allow all operations on billboards" ON billboards
     FOR ALL 
     USING (true)
     WITH CHECK (true);

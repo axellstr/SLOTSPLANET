@@ -1,5 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
-import { XIcon, SaveIcon, PlusIcon, StarIcon, ShieldIcon, TrendingUpIcon, CreditCardIcon, SettingsIcon, InfoIcon, UploadIcon, ImageIcon } from 'lucide-react';
+import { 
+  RiCloseLine,
+  RiSaveLine,
+  RiAddLine,
+  RiStarFill,
+  RiShieldCheckLine,
+  RiLineChartLine,
+  RiBankCardLine,
+  RiSettings4Line,
+  RiInformationLine,
+  RiUploadLine,
+  RiImageLine
+} from '@remixicon/react';
 import { Casino } from '../lib/types';
 import { getRankClass } from '../lib/casinoData';
 
@@ -179,9 +191,9 @@ export default function CasinoForm({ casino, isOpen, onClose, onSave, existingCa
         {/* Modal Header */}
         <div className="modal-header">
           <div className="modal-title-section">
-            <div className="modal-icon">
-              {casino ? <SettingsIcon className="w-6 h-6" /> : <PlusIcon className="w-6 h-6" />}
-            </div>
+                      <div className="modal-icon">
+            {casino ? <RiSettings4Line className="w-6 h-6" /> : <RiAddLine className="w-6 h-6" />}
+          </div>
             <div>
               <h2 className="modal-title">
                 {casino ? 'Edit Casino' : 'Add New Casino'}
@@ -192,7 +204,7 @@ export default function CasinoForm({ casino, isOpen, onClose, onSave, existingCa
             </div>
           </div>
           <button onClick={onClose} className="modal-close-btn">
-            <XIcon className="w-6 h-6" />
+            <RiCloseLine className="w-6 h-6" />
           </button>
         </div>
 
@@ -203,7 +215,7 @@ export default function CasinoForm({ casino, isOpen, onClose, onSave, existingCa
             {errors.length > 0 && (
               <div className="error-container">
                 <div className="error-icon">
-                  <InfoIcon className="w-5 h-5" />
+                  <RiInformationLine className="w-5 h-5" />
                 </div>
                 <div>
                   <h3 className="error-title">Please fix the following errors:</h3>
@@ -224,7 +236,7 @@ export default function CasinoForm({ casino, isOpen, onClose, onSave, existingCa
                 <div className="form-section">
                   <div className="section-header">
                     <div className="section-icon">
-                      <InfoIcon className="w-5 h-5" />
+                      <RiInformationLine className="w-5 h-5" />
                     </div>
                     <h3 className="section-title">Basic Information</h3>
                   </div>
@@ -269,7 +281,7 @@ export default function CasinoForm({ casino, isOpen, onClose, onSave, existingCa
                             </>
                           ) : (
                             <>
-                              <UploadIcon className="w-4 h-4 mr-2" />
+                              <RiUploadLine className="w-4 h-4 mr-2" />
                               Upload Logo
                             </>
                           )}
@@ -345,7 +357,7 @@ export default function CasinoForm({ casino, isOpen, onClose, onSave, existingCa
                 <div className="form-section">
                   <div className="section-header">
                     <div className="section-icon">
-                      <ShieldIcon className="w-5 h-5" />
+                      <RiShieldCheckLine className="w-5 h-5" />
                     </div>
                     <h3 className="section-title">Status & Features</h3>
                   </div>
@@ -360,7 +372,7 @@ export default function CasinoForm({ casino, isOpen, onClose, onSave, existingCa
                         className="form-checkbox"
                       />
                       <label htmlFor="isNew" className="checkbox-label">
-                        <TrendingUpIcon className="w-4 h-4" />
+                        <RiLineChartLine className="w-4 h-4" />
                         Mark as NEW
                       </label>
                     </div>
@@ -374,7 +386,7 @@ export default function CasinoForm({ casino, isOpen, onClose, onSave, existingCa
                         className="form-checkbox"
                       />
                       <label htmlFor="hasVPN" className="checkbox-label">
-                        <ShieldIcon className="w-4 h-4" />
+                        <RiShieldCheckLine className="w-4 h-4" />
                         Requires VPN
                       </label>
                     </div>
@@ -388,7 +400,7 @@ export default function CasinoForm({ casino, isOpen, onClose, onSave, existingCa
                         className="form-checkbox"
                       />
                       <label htmlFor="quickWithdrawals" className="checkbox-label">
-                        <CreditCardIcon className="w-4 h-4" />
+                        <RiBankCardLine className="w-4 h-4" />
                         Quick Withdrawals
                       </label>
                     </div>
@@ -402,7 +414,7 @@ export default function CasinoForm({ casino, isOpen, onClose, onSave, existingCa
                 <div className="form-section">
                   <div className="section-header">
                     <div className="section-icon">
-                      <CreditCardIcon className="w-5 h-5" />
+                      <RiBankCardLine className="w-5 h-5" />
                     </div>
                     <h3 className="section-title">Bonus Information</h3>
                   </div>
@@ -493,7 +505,7 @@ export default function CasinoForm({ casino, isOpen, onClose, onSave, existingCa
                 <div className="form-section">
                   <div className="section-header">
                     <div className="section-icon">
-                      <SettingsIcon className="w-5 h-5" />
+                      <RiSettings4Line className="w-5 h-5" />
                     </div>
                     <h3 className="section-title">Additional Settings</h3>
                   </div>
@@ -548,7 +560,7 @@ export default function CasinoForm({ casino, isOpen, onClose, onSave, existingCa
                 Cancel
               </button>
               <button type="submit" className="btn-submit">
-                <SaveIcon className="w-4 h-4 mr-2" />
+                <RiSaveLine className="w-4 h-4 mr-2" />
                 {casino ? 'Update Casino' : 'Add Casino'}
               </button>
             </div>

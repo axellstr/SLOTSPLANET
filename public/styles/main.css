@@ -1,5 +1,6 @@
 /* Main Website Styles */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alpino:wght@400;500;600;700;800&display=swap');
 
 * {
   margin: 0;
@@ -10,7 +11,174 @@
 body {
   font-family: 'Inter', sans-serif;
   line-height: 1.6;
-  background-color: #0f0f23;
+  background-color: #000000;
+  background-image: url('/Assets/test.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  margin: 0;
+  padding: 0;
+}
+
+/* Main layout container using CSS Grid */
+.main-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  min-height: 100vh;
+}
+
+/* Header styles - now part of grid */
+header {
+  grid-column: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: transparent;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.logo img {
+  width: 200px;
+  height: auto;
+}
+
+nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+nav a,
+.nav-link {
+  color: #fbf5f3;
+  background-color: rgba(0, 0, 0, 1);
+  border: 2px solid rgba(77, 0, 153, 0.534);
+  text-decoration: none;
+  border-radius: 0.5rem;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-shadow: 5px 5px 0px rgba(77, 0, 153, 0.534);
+  position: relative;
+  width: 100%;
+  min-height: 48px;
+  box-sizing: border-box;
+}
+
+/* Navigation link content wrapper */
+.nav-link-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  gap: 10px;
+  position: relative;
+}
+
+.nav-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: inherit;
+}
+
+.nav-image {
+  flex-shrink: 0;
+  object-fit: contain;
+  max-width: 100%;
+}
+
+/* Legacy icon styles */
+nav a i {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+nav a:hover,
+nav a:focus,
+.nav-link:hover,
+.nav-link:focus {
+  background-color: rgb(0, 0, 0) !important;
+  color: rgb(255, 255, 255);
+  transform: translateY(-3px);
+  box-shadow: 0px 5px 0px rgba(77, 0, 153, 0.534);
+}
+
+nav a:active,
+.nav-link:active {
+  transform: translateY(-1px);
+  box-shadow: 0px 5px 0px rgba(42, 0, 85, 0.534);
+}
+
+/* Status indicator for Twitch */
+.status-indicator {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background-color: #00ff00;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+#menuToggle {
+  display: none; /* Hidden by default */
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10000;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+#menuToggle button {
+  all: unset;
+  cursor: pointer;
+}
+
+.menu-icon {
+  color: #fff;
+}
+
+/* Main content area - now part of grid */
+.main-content {
+  grid-column: 2;
+  min-height: 100vh;
 }
 
 .container {
@@ -19,16 +187,135 @@ body {
   padding: 0 20px;
 }
 
+/* Responsive breakpoints using CSS Grid */
+@media (max-width: 1440px) and (min-width: 1025px) {
+  /* Medium-large screens */
+  .main-layout {
+    grid-template-columns: 220px 1fr;
+  }
+  
+  nav a,
+  .nav-link {
+    padding: 10px 16px;
+    font-size: 15px;
+    min-height: 44px;
+  }
+  
+  .logo img {
+    width: 180px;
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  /* Medium screens - tablet landscape */
+  .main-layout {
+    grid-template-columns: 200px 1fr;
+  }
+  
+  nav a,
+  .nav-link {
+    padding: 8px 14px;
+    font-size: 14px;
+    min-height: 40px;
+  }
+  
+  nav {
+    gap: 0.7rem;
+    padding: 0.8rem;
+  }
+  
+  .logo img {
+    width: 160px;
+  }
+  
+  /* Adjust casino cards for medium screens */
+  .casino-card-content {
+    grid-template-columns: 250px 1fr auto;
+    gap: 20px;
+    padding: 0.8rem;
+  }
+  
+  .bonus-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 8px;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile devices - single column layout */
+  .main-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  
+  header {
+    grid-column: 1;
+    grid-row: 1;
+    position: fixed;
+    left: -250px;
+    top: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 9999;
+    transition: left 0.4s ease-in-out;
+  }
+  
+  header.mobile-open {
+    left: 0;
+  }
+  
+  .main-content {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  
+  #menuToggle {
+    display: block;
+  }
+  
+  nav {
+    gap: 0.8rem;
+  }
+  
+  nav a,
+  .nav-link {
+    padding: 10px 16px;
+    font-size: 14px;
+    min-height: 44px;
+  }
+  
+  .logo {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .logo img {
+    width: 160px;
+  }
+}
+
 /* Casino Card Container */
 .casino-card-container {
   display: flex;
   align-items: stretch;
   margin-bottom: 20px;
-  border-radius: 20px;
+  border-radius: 1rem;
   overflow: hidden;
   transition: all 0.3s ease;
-  background: linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
   backdrop-filter: blur(10px);
+}
+
+/* Allow badges area to overflow for tooltips */
+.casino-card-container .casino-left-section {
+  overflow: visible;
+}
+
+.casino-card-container .casino-badges {
+  overflow: visible;
 }
 
 
@@ -40,39 +327,40 @@ body {
   align-items: center;
   justify-content: center;
   position: relative;
-  border-radius: 20px 0 0 20px;
+  border-radius: 1rem 0 0 1rem;
+  box-shadow: rgba(0, 0, 0, 0.75) -5px 0px 6px 0px inset;
 }
 
 .casino-rank-badge.rank-1 {
-  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  background: linear-gradient(135deg, #ff4500, #ff6b35);
 }
 
 .casino-rank-badge.rank-2 {
-  background: linear-gradient(135deg, #ff8c42, #ff7518);
+  background: linear-gradient(135deg, #ff6b35, #ff8c42);
 }
 
 .casino-rank-badge.rank-3 {
-  background: linear-gradient(135deg, #ffd662, #ffb347);
+  background: linear-gradient(135deg, #ff8c42, #ffad5a);
 }
 
 .casino-rank-badge.rank-4 {
-  background: linear-gradient(135deg, #6bcf7f, #4ecdc4);
+  background: linear-gradient(135deg, #ffad5a, #ffcc73);
 }
 
 .casino-rank-badge.rank-5 {
-  background: linear-gradient(135deg, #45b7d1, #96ceb4);
+  background: linear-gradient(135deg, #ffcc73, #ffe08c);
 }
 
 .casino-rank-badge.rank-6 {
-  background: linear-gradient(135deg, #a855f7, #8b5cf6);
+  background: linear-gradient(135deg, #ffe08c, #fff2a6);
 }
 
 .casino-rank-badge.rank-7 {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
+  background: linear-gradient(135deg, #fff2a6, #fffbbf);
 }
 
 .rank-number {
-  font-size: 32px;
+  font-size: 2rem;
   font-weight: 900;
   color: white;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -84,10 +372,10 @@ body {
   grid-template-columns: 300px 1fr auto;
   align-items: center;
   width: 100%;
-  padding: 24px;
+  padding: 1rem;
   gap: 32px;
-  background: linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
   position: relative;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 
@@ -95,6 +383,8 @@ body {
 .casino-left-section {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;  
   gap: 16px;
 }
 
@@ -106,42 +396,47 @@ body {
 }
 
 .casino-logo {
-  height: 60px;
-  width: auto;
-  max-width: 200px;
+  width: 200px;
+  height: 50px;
   object-fit: contain;
-  filter: brightness(1.1);
 }
 
 .casino-badges {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  gap: 1rem;
+  padding: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1000;
 }
 
 .badge-new {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  background: linear-gradient(135deg, #f58e4a 0%, #ee5a24 100%);
   color: white;
   font-size: 10px;
   font-weight: 700;
   padding: 4px 8px;
-  border-radius: 12px;
+  border-radius: 0.5rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+
 }
 
 .badge-vpn {
-  background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
-  color: white;
+  border: 2px dotted rgba(0, 255, 30, 0.635);
+  color: rgba(255, 255, 255, 0.694);
   padding: 6px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: help;
-  box-shadow: 0 4px 8px rgba(78, 205, 196, 0.3);
+  position: relative;
+  transition: all 0.3s ease;
 }
+
+
+
 
 .casino-rating-container {
   display: flex;
@@ -151,18 +446,16 @@ body {
 .rating-display {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
-  background: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
-  padding: 12px 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.5rem;
 }
 
 .rating-number {
-  font-size: 28px;
+  font-size: 1rem;
   font-weight: 800;
-  color: #ffd93d;
-  text-shadow: 0 0 10px rgba(255, 217, 61, 0.5);
+  color: #ffffff;
 }
 
 .stars-display {
@@ -231,7 +524,7 @@ body {
   font-size: 16px;
   font-weight: 700;
   padding: 16px 32px;
-  border-radius: 5rem;
+  border-radius: 0.75rem;
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -258,10 +551,6 @@ body {
   left: 100%;
 }
 
-.claim-bonus-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 25px rgba(255, 71, 87, 0.4);
-}
 
 .claim-bonus-button:active {
   transform: translateY(0);
@@ -270,13 +559,11 @@ body {
 .quick-withdrawals-badge {
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(52, 211, 153, 0.1);
-  border: 1px solid rgba(52, 211, 153, 0.3);
-  border-radius: 20px;
+  background: transparent;
+  border-radius: 0.5rem;
   padding: 6px 12px;
   font-size: 12px;
-  color: #34d399;
+  color: #ffffff;
   font-weight: 600;
 }
 
@@ -317,6 +604,7 @@ body {
   }
   
   .casino-left-section {
+    flex-direction: row;
     align-items: center;
   }
   
@@ -329,7 +617,7 @@ body {
   }
   
   .bonus-grid {
-    max-width: 100%;
+    max-width: 80%;
   }
   
   .casino-right-section {
@@ -347,8 +635,13 @@ body {
     width: 100%;
     height: 60px;
     border-radius: 20px 20px 0 0;
-    justify-content: flex-start;
+    justify-content: center;
     padding-left: 24px;
+  }
+  .casino-left-section {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
   
   .casino-card-content {
@@ -516,5 +809,291 @@ body {
   .floating-admin-btn .admin-icon {
     width: 20px;
     height: 20px;
+  }
+}
+
+/* Billboard Carousel Styles */
+.billboard-carousel {
+  position: relative;
+  width: 100%;
+  height: 340px;
+  border-radius: 1rem;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.billboard-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.billboard-slides-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.billboard-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.billboard-slide.active {
+  opacity: 1;
+}
+
+.billboard-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  max-width: 600px;
+  text-align: left;
+  padding: 2rem;
+}
+
+.billboard-text {
+  color: white;
+}
+
+.billboard-title {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.billboard-subtitle {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  color: #e2e8f0;
+  opacity: 0.9;
+}
+
+.billboard-description {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+  opacity: 0.8;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  max-width: 350px;
+}
+
+.billboard-button {
+  display: inline-block;
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.6rem 1.5rem;
+  text-decoration: none;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.billboard-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.billboard-button:hover::before {
+  left: 100%;
+}
+
+
+/* Navigation Controls Container */
+.billboard-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 10;
+}
+
+/* Navigation Arrows */
+.billboard-nav {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+
+
+/* Dot Indicators */
+.billboard-indicators {
+  display: flex;
+  gap: 8px;
+}
+
+.billboard-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.billboard-dot.active {
+  background: #ff6b35;
+  transform: scale(1.2);
+}
+
+.billboard-dot:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive Billboard */
+@media (max-width: 1024px) {
+  .billboard-carousel {
+    height: 350px;
+  }
+  
+  .billboard-content {
+    max-width: 450px;
+    padding: 1.8rem;
+  }
+  
+  .billboard-title {
+    font-size: 1.8rem;
+  }
+  
+  .billboard-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .billboard-description {
+    font-size: 0.8rem;
+    max-width: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  .billboard-carousel {
+    height: 300px;
+  }
+  
+  .billboard-content {
+    max-width: 400px;
+    padding: 1.5rem;
+  }
+  
+  .billboard-title {
+    font-size: 1.6rem;
+  }
+  
+  .billboard-subtitle {
+    font-size: 0.85rem;
+  }
+  
+  .billboard-description {
+    font-size: 0.75rem;
+    margin-bottom: 0.8rem;
+    max-width: 280px;
+  }
+  
+  .billboard-button {
+    font-size: 0.75rem;
+    padding: 0.5rem 1.2rem;
+  }
+  
+  .billboard-controls {
+    bottom: 15px;
+    right: 15px;
+    gap: 12px;
+  }
+  
+  .billboard-nav {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .billboard-carousel {
+    height: 250px;
+  }
+  
+  .billboard-content {
+    max-width: 320px;
+    padding: 1.2rem;
+  }
+  
+  .billboard-title {
+    font-size: 1.4rem;
+  }
+  
+  .billboard-subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .billboard-description {
+    font-size: 0.7rem;
+    margin-bottom: 0.7rem;
+    max-width: 250px;
+    line-height: 1.3;
+  }
+  
+  .billboard-button {
+    font-size: 0.7rem;
+    padding: 0.45rem 1rem;
+    border-radius: 20px;
+  }
+  
+  .billboard-controls {
+    bottom: 10px;
+    right: 10px;
+    gap: 10px;
+  }
+  
+  .billboard-nav {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .billboard-indicators {
+    gap: 6px;
+  }
+  
+  .billboard-dot {
+    width: 10px;
+    height: 10px;
   }
 } 

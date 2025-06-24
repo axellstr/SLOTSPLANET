@@ -1,7 +1,143 @@
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Head from 'next/head';
-import { StarIcon, ShieldIcon, SettingsIcon } from 'lucide-react';
+import { RiStarFill, RiShieldCheckLine, RiSettings4Line, RiArrowLeftSLine, RiArrowRightSLine } from '@remixicon/react';
 import { Casino } from '../lib/types';
+import Header from '../components/Header';
+
+const BillboardCarousel = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [slides, setSlides] = useState<any[]>([]);
+
+  // Load billboard data
+  useEffect(() => {
+    const loadBillboards = async () => {
+      try {
+        const response = await fetch('/api/billboards');
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          // Filter active billboards and sort by order
+          const activeSlides = result.data
+            .filter((billboard: any) => billboard.isActive)
+            .sort((a: any, b: any) => a.order - b.order);
+          setSlides(activeSlides);
+        }
+      } catch (error) {
+        console.error('Failed to load billboards:', error);
+        // Fallback to default slides
+        setSlides([
+          {
+            id: 1,
+            title: "Exclusive Welcome Bonus",
+            subtitle: "Get up to €500 + 200 Free Spins",
+            description: "Join now and claim your exclusive welcome package with amazing bonuses and free spins!",
+            buttonText: "Claim Now",
+            buttonUrl: "#",
+            backgroundImage: "/Assets/place.svg"
+          },
+          {
+            id: 2,
+            title: "VIP Casino Experience",
+            subtitle: "Premium Gaming at Its Finest",
+            description: "Experience luxury gaming with our VIP program, exclusive games, and personal account managers.",
+            buttonText: "Learn More",
+            buttonUrl: "#",
+            backgroundImage: "/Assets/place.svg"
+          },
+          {
+            id: 3,
+            title: "Weekly Tournaments",
+            subtitle: "Compete for €10,000 Prize Pool",
+            description: "Join our weekly casino tournaments and compete against players worldwide for massive prizes!",
+            buttonText: "Join Tournament",
+            buttonUrl: "#",
+            backgroundImage: "/Assets/place.svg"
+          }
+        ]);
+      }
+    };
+
+    loadBillboards();
+  }, []);
+
+  // Auto-slide every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [slides.length]);
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
+
+  const goToPrevious = () => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  const goToNext = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  // Don't render if no slides
+  if (slides.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="billboard-carousel">
+      <div className="billboard-container">
+        {/* Slides */}
+        <div className="billboard-slides-wrapper">
+          {slides.map((slide, index) => (
+            <div
+              key={slide.id}
+              className={`billboard-slide ${index === currentSlide ? 'active' : ''}`}
+              style={{
+                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8)), url(${slide.backgroundImage})`,
+              }}
+            >
+              <div className="billboard-content">
+                <div className="billboard-text">
+                  <h2 className="billboard-title">{slide.title}</h2>
+                  <h3 className="billboard-subtitle">{slide.subtitle}</h3>
+                  <p className="billboard-description">{slide.description}</p>
+                  <a 
+                    href={slide.buttonUrl}
+                    className="billboard-button"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {slide.buttonText}
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Navigation Controls */}
+        <div className="billboard-controls">
+
+          {/* Dot Indicators */}
+          <div className="billboard-indicators">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                className={`billboard-dot ${index === currentSlide ? 'active' : ''}`}
+                onClick={() => goToSlide(index)}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default function HomePage() {
   const [casinos, setCasinos] = useState<Casino[]>([]);
@@ -30,7 +166,7 @@ export default function HomePage() {
 
   const renderStars = (stars: number) => {
     return Array(5).fill(0).map((_, i) => (
-      <StarIcon 
+      <RiStarFill 
         key={i} 
         className={`w-4 h-4 ${i < stars ? 'text-yellow-400 fill-current' : 'text-gray-600'}`} 
       />
@@ -39,7 +175,7 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+      <div>
         <Head>
           <title>Best Online Casinos 2024 button</title>
           <meta name="description" content="Discover the best online casinos with exclusive bonuses and top ratings" />
@@ -54,22 +190,30 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+    <>
       <Head>
         <title>Best Online Casinos 2024</title>
         <meta name="description" content="Discover the best online casinos with exclusive bonuses and top ratings" />
         <link rel="stylesheet" href="/styles/main.css" />
       </Head>
 
-      <main className="container mx-auto px-4 py-12">
-        {/* Header Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
-            Best Online Casinos 2024
-          </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Discover top-rated online casinos with exclusive bonuses, fast withdrawals, and incredible gaming experiences
-          </p>
+      <div className="main-layout">
+        {/* Header Component */}
+        <Header />
+
+        {/* Main Content */}
+        <div className="main-content">
+          <main className="container mx-auto px-4 py-12">
+        {/* Billboard Carousel Section */}
+        <div className="max-w-6xl mx-auto mb-12">
+          <BillboardCarousel />
+        </div>
+
+        {/* Placeholder Text Section */}
+        <div className="max-w-6xl mx-auto mb-12 text-center">
+          <h2 className="text-4xl font-bold text-white mb-4">
+            Top Rated Online Casinos {new Date().getFullYear()}
+          </h2>
         </div>
 
         {/* Casino Cards */}
@@ -85,22 +229,25 @@ export default function HomePage() {
               <div className="casino-card-content">
                 {/* Left Section: Logo, Name, Rating */}
                 <div className="casino-left-section">
+                <div className="casino-badges">
+                      {casino.isNew && (
+                        <span className="badge-new">NEW</span>
+                      )}
+                      {casino.hasVPN && (
+                        <span 
+                          className="badge-vpn" 
+                          data-tooltip="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore."
+                        >
+                          <RiShieldCheckLine className="w-4 h-4" />
+                        </span>
+                      )}
+                    </div>
                   <div className="casino-logo-container">
                     <img 
                       src={casino.logo} 
                       alt={casino.name}
                       className="casino-logo"
                     />
-                    <div className="casino-badges">
-                      {casino.isNew && (
-                        <span className="badge-new">NEW</span>
-                      )}
-                      {casino.hasVPN && (
-                        <div className="badge-vpn" title={casino.vpnTooltip}>
-                          <ShieldIcon className="w-4 h-4" />
-                        </div>
-                      )}
-                    </div>
                   </div>
                   
                   <div className="casino-rating-container">
@@ -156,7 +303,6 @@ export default function HomePage() {
                   {casino.features.quickWithdrawals && (
                     <div className="quick-withdrawals-badge">
                       <span className="withdrawal-text">{casino.features.withdrawalText}</span>
-                      <span className="withdrawal-icon">⚡</span>
                     </div>
                   )}
                 </div>
@@ -165,24 +311,22 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Footer Info */}
-        <div className="text-center mt-16 text-gray-400">
-          <p className="text-sm">
-            * Terms and conditions apply. Please gamble responsibly. 18+
-          </p>
-        </div>
-      </main>
+            {/* Footer Info */}
+            <div className="text-center mt-16 text-gray-400">
+              <p className="text-sm">
+                * Terms and conditions apply. Please gamble responsibly. 18+
+              </p>
+            </div>
 
-      {/* Floating Admin Button */}
-      <a
-        href="/admin"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="floating-admin-btn"
-        title="Admin Panel"
-      >
-        <SettingsIcon className="admin-icon" />
-      </a>
-    </div>
+            {/* Floating Admin Button - Only visible for admin/development */}
+            <div className="floating-admin-btn">
+              <Link href="/admin" className="admin-link">
+                <RiSettings4Line className="admin-icon" />
+              </Link>
+            </div>
+          </main>
+        </div>
+      </div>
+    </>
   );
 } 
